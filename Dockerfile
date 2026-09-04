@@ -12,14 +12,12 @@ COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
 WORKDIR /var/www
 
-COPY composer.json composer.lock ./
-
-RUN composer install --no-dev --optimize-autoloader --no-interaction
-
 COPY . .
+
+RUN composer install --no-dev --optimize-autoloader --no-interaction --no-scripts
 
 RUN php artisan optimize:clear
 
 EXPOSE 10000
 
-CMD php artisan serve --host=0.0.0.0 --port=${PORT:-10000}
+CMD ["sh", "-c", "php artisan serve --host=0.0.0.0 --port=${PORT:-10000}"]
